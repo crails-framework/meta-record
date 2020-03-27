@@ -4,10 +4,14 @@ class Model
   class << self
     attr_accessor :current_file
 
-    def add name, definition = [], &block
+    def add name, definition = {}, &block
       @list ||= []
+      if definition.kind_of?(Array)
+        definition = { classname: definition.first, hpp: definition.last }
+      end
+      definition[:classname] ||= "::#{name}"
       @list << { name: name, filename: current_file, block: block,
-                 classname: definition.first, header: definition.last }
+                 classname: definition[:classname], header: definition[:hpp] }
     end
 
     def list
@@ -23,8 +27,9 @@ class Includes
   end
 end
 
-def add_include path, include_in_header = false
-  if include_in_header
+def add_include path, options = {}
+  options = { include_in_header: true } if options.kind_of? TrueClass
+  if options[:include_in_header]
     Includes.headers ||= {}
     Includes.headers[Model.current_file] ||= []
     Includes.headers[Model.current_file] << path
