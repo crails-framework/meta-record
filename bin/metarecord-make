@@ -8,6 +8,7 @@ Dir["config/metarecord.rb"].each do |file|
   require "#{Dir.pwd}/#{file}"
 end
 
+@base_path  = ""
 @output     = ""
 @input      = []
 @generators = []
@@ -15,6 +16,7 @@ end
 
 OptionParser.new do |opts|
   opts.on "-o PATH",       "--output-path=PATH" do |v| @output     = v end
+  opts.on "-b PATH",       "--base-path=PATH"   do |v| @base_path  = v end
   opts.on "-i PATH",       "--source-path=PATH" do |v| @input      = v.split(",") end
   opts.on "-g GENERATORS", "--use=GENERATORS"   do |v| @generators = v.split(",") end
   opts.on "-z PATH",       "--tmp-dir=PATH"     do |v| @tmpdir     = v end

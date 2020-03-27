@@ -21,7 +21,8 @@ class GeneratorBase
   class << self
     attr_accessor :odb_connection
 
-    def prepare inputs_dir, output_dir
+    def prepare inputs_dir, output_dir, base_path
+      @base_path = base_path
       @output_dir = output_dir
       Includes.list ||= {}
       inputs_dir.each do |input_dir|
@@ -44,7 +45,9 @@ class GeneratorBase
         data = { bodies: [generator.generate_for(model)] }
         data[:headers] = [generator.get_headers] if generator.methods.include? :get_headers
         source = generator_class.make_file model[:filename], data
-        filepath = "#{@output_dir}/" + (File.dirname model[:filename])
+        dirname = File.dirname model[:filename]
+        dirname.gsub! /^#{@base_path}/, '' unless @base_path.nil?
+        filepath = "#{@output_dir}/" + dirname
         filename = model[:name].underscore + generator_class.extension
         `mkdir -p #{filepath}`
         File.open "#{filepath}/#{filename}", 'w' do |f|
@@ -70,6 +73,7 @@ class GeneratorBase
       files.each do |key,value|
         source = generator_class.make_file key, value
         path   = generator_class.sourcefile_to_destfile key
+        path.gsub! /^#{@base_path}/, '' unless @base_path.nil?
         `mkdir -p #{@output_dir}/#{File.dirname path}`
         File.open "#{@output_dir}/#{path}", 'w' do |f|
           f.write source

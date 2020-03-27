@@ -6,7 +6,7 @@ module MetaRecordRunner
       require "metarecord/generators/#{generator.to_s}_generator"
     end
     `rm -Rf #{@tmpdir}`
-    GeneratorBase.prepare @input, @tmpdir
+    GeneratorBase.prepare @input, @tmpdir, @base_path
     GeneratorBase.odb_connection = @odb_connection
     @generators.each do |generator|
       const_name = generator.to_s.camelcase + "Generator"

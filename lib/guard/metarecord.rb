@@ -10,6 +10,7 @@ module ::Guard
 
     def initialize options = {}
       super
+      @base_path      = options[:base_path]
       @input          = options[:input]
       @output         = options[:output]
       @generators     = options[:generators]
