@@ -2,6 +2,10 @@ require 'metarecord/model'
 require 'metarecord/generator_base'
 
 class RailsDataGenerator < GeneratorBase
+  class << self
+    def is_file_based? ; false ; end
+  end
+
   def model_base_class
     if defined? RAILS_RECORD_BASE
       RAILS_RECORD_BASE
@@ -76,7 +80,7 @@ class RailsDataGenerator < GeneratorBase
     db_options  = options[:db] || {}
     foreign_key = db_options[:column] || "#{name}_id"
     if options[:joined] != false
-      _append "belongs_to #{name.to_s.inspect},"
+      _append "belongs_to #{name.to_sym.inspect},"
       indent do
         optional = if db_options[:null].nil? then true else db_options[:null] end
         _append "class_name: #{type.to_s.inspect},"
@@ -84,7 +88,7 @@ class RailsDataGenerator < GeneratorBase
         _append "optional: #{optional}"
       end
     else
-      _append "has_one #{name.to_s.inspect},"
+      _append "has_one #{name.to_sym.inspect},"
       indent do
         _append "class_naem: #{type.to_s.inspect},"
         _append "foreign_key: #{foreign_key.to_s.inspect}"
@@ -95,7 +99,7 @@ class RailsDataGenerator < GeneratorBase
   def has_many type, name, options = {}
     db_options = options[:db] || {}
     if options[:joined] != false
-      _append "has_many #{name.inspect}"
+      _append "has_many #{name.to_sym.inspect}"
     else
       throw "id based has_many is not supported by the rails generator"
     end
@@ -107,8 +111,7 @@ class RailsDataGenerator < GeneratorBase
     def make_file filename, data
       <<RUBY
 module #{METARECORD_NAMESPACE}
-#{data[:bodies].join "\n"}
-end
+#{data[:bodies].join "\n"}end
 RUBY
     end
   end
