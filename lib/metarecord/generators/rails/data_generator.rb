@@ -3,7 +3,11 @@ require 'metarecord/generator_base'
 
 class RailsDataGenerator < GeneratorBase
   def model_base_class
-    "ActiveRecord::Base"
+    if defined? RAILS_RECORD_BASE
+      RAILS_RECORD_BASE
+    else
+      "ActiveRecord::Base"
+    end
   end
   
   def generate_for object
@@ -52,7 +56,7 @@ class RailsDataGenerator < GeneratorBase
   end
 
   def property type, name, options = {}
-    has_custom_column_name = options[:column].nil?
+    has_custom_column_name = !options[:column].nil?
     rails_name = (options[:column] || name).to_s
     if type == 'DataTree'
       _append "store #{rails_name.inspect}, coder: JSON"
@@ -103,7 +107,7 @@ class RailsDataGenerator < GeneratorBase
     def make_file filename, data
       <<RUBY
 module #{METARECORD_NAMESPACE}
-  #{data[:bodies].join "\n"}
+#{data[:bodies].join "\n"}
 end
 RUBY
     end

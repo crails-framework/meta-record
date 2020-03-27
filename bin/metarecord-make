@@ -8,16 +8,16 @@ Dir["config/metarecord.rb"].each do |file|
   require "#{Dir.pwd}/#{file}"
 end
 
-@output_path = ""
-@source_path = []
-@generators  = []
-@tmpdir      = ".tmp"
+@output     = ""
+@input      = []
+@generators = []
+@tmpdir     = ".tmp"
 
 OptionParser.new do |opts|
-  opts.on "-o PATH",       "--output-path=PATH" do |v| @output_path = v end
-  opts.on "-i PATH",       "--source-path=PATH" do |v| @source_path = v.split(",") end
-  opts.on "-g GENERATORS", "--use=GENERATORS"   do |v| @generators  = v.split(",") end
-  opts.on "-z PATH",       "--tmp-dir=PATH"     do |v| @tmpdir      = v end
+  opts.on "-o PATH",       "--output-path=PATH" do |v| @output     = v end
+  opts.on "-i PATH",       "--source-path=PATH" do |v| @input      = v.split(",") end
+  opts.on "-g GENERATORS", "--use=GENERATORS"   do |v| @generators = v.split(",") end
+  opts.on "-z PATH",       "--tmp-dir=PATH"     do |v| @tmpdir     = v end
   opts.on "-h"             "--help" do
     puts opts
     exit
@@ -25,9 +25,9 @@ OptionParser.new do |opts|
 end.parse!
 
 def check_options
-  if @output_path.nil?
+  if @output.nil?
     puts "/!\\ Output path not specified"
-  elsif @source_path.empty?
+  elsif @input.empty?
     puts "/!\\ You must provide at least one source directory"
   elsif @generators.empty?
     puts "/!\\ You nust specify at least one generator to use"
