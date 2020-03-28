@@ -14,13 +14,36 @@ class RailsDataGenerator < GeneratorBase
     end
   end
   
+  def reset
+    super
+    @default_authorized_properties = []
+  end
+
   def generate_for object
     reset
-    _append "class #{object[:name]} < #{model_base_class}"
     indent do
-      _append "self.abstract_class = true"
-      _append ""
-      self.instance_eval &object[:block]
+      _append "class #{object[:name]} < #{model_base_class}"
+      indent do
+        _append "self.abstract_class = true"
+        _append ""
+        self.instance_eval &object[:block]
+        _append ""
+        generate_default_authorized_properties
+      end
+      _append "end"
+    end
+    @src
+  end
+
+  def generate_default_authorized_properties
+    _append "class << self"
+    indent do
+      _append "def permitted_attributes"
+      indent do
+        symbols = @default_authorized_properties.collect do |v| v.to_sym.inspect end
+        _append "[#{symbols.join ','}]"
+      end
+      _append "end"
     end
     _append "end"
   end
@@ -74,32 +97,28 @@ class RailsDataGenerator < GeneratorBase
       _append "end"
     end
     validation type, rails_name, options[:validate] unless options[:validate].nil?
+    @default_authorized_properties << name unless options[:read_only]
   end
 
   def has_one type, name, options = {}
     db_options  = options[:db] || {}
     foreign_key = db_options[:column] || "#{name}_id"
-    if options[:joined] != false
-      _append "belongs_to #{name.to_sym.inspect},"
-      indent do
-        optional = if db_options[:null].nil? then true else db_options[:null] end
-        _append "class_name: #{type.to_s.inspect},"
-        _append "foreign_key: #{foreign_key.to_s.inspect},"
-        _append "optional: #{optional}"
-      end
-    else
-      _append "has_one #{name.to_sym.inspect},"
-      indent do
-        _append "class_naem: #{type.to_s.inspect},"
-        _append "foreign_key: #{foreign_key.to_s.inspect}"
-      end
+    _append "belongs_to #{name.to_sym.inspect},"
+    indent do
+      optional = if db_options[:null].nil? then true else db_options[:null] end
+      _append "class_name: #{type.to_s.inspect},"
+      _append "foreign_key: #{foreign_key.to_s.inspect},"
+      _append "optional: #{optional}"
     end
   end
 
   def has_many type, name, options = {}
     db_options = options[:db] || {}
     if options[:joined] != false
-      _append "has_many #{name.to_sym.inspect}"
+      suffix = []
+      suffix << "class_name: #{type.to_s.inspect}"
+      suffix << "dependent: #{options[:dependent].to_sym.inspect}" if options[:dependent] && options[:dependent].to_sym != :unlink
+      _append "has_many #{name.to_sym.inspect}, #{suffix.join ','}"
     else
       throw "id based has_many is not supported by the rails generator"
     end
