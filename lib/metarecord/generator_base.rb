@@ -14,6 +14,7 @@ class String
 end
 
 require 'pathname'
+require 'json'
 
 class GeneratorBase
   def self.is_file_based? ; true ; end
