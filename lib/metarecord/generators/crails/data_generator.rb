@@ -24,7 +24,7 @@ class CrailsDataGenerator < GeneratorBase
   def get_headers
     forward_source = ""
     @forward_declarations.each do |type|
-      parts = type.split('::')
+      parts = type.split('::').reject {|part| part.empty?}
       last_part = parts.last
       if parts.length > 1
         parts[0...parts.size-1].each do |part|
