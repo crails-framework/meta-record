@@ -45,7 +45,7 @@ class AureliaGenerator < GeneratorBase
     @indent -= 1
     @src += "\n"
     _append "];"
-    _append "_.extend(#{@class_name}.fields, new Fields);"
+    _append "Fields.inject(#{@class_name}.fields);"
     _append "#{@class_name}.fields._mapFields();"
   end
 
@@ -129,7 +129,7 @@ class AureliaGenerator < GeneratorBase
   end
 
   class << self
-    def extension ; ".data.js" ; end
+    def extension ; ".js" ; end
 
     def is_file_based? ; false ; end
 
