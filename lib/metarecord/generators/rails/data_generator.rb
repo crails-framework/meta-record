@@ -50,8 +50,9 @@ class RailsDataGenerator < GeneratorBase
 
   def validation type, name, data
     src = "validates #{name.to_s.inspect}"
-    src += ", presence: true"   if data[:required] == true
-    src += ", uniqueness: true" if data[:uniqueness] == true
+    src += ", presence: true"     if data[:required] == true
+    src += ", allow_blank: false" if data[:required] && type == "std::string"
+    src += ", uniqueness: true"   if data[:uniqueness] == true
     if !data[:min].nil? || !data[:max].nil?
       src += validation_numericality name, data
     end
