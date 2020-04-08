@@ -105,10 +105,10 @@ class GeneratorBase
     @indent -= 1
   end
 
-  def _append str
+  def _append str, opts = {}
     @src += " " * (@indent * @tab_size)
     @src += str
-    @src += "\n"
+    @src += "\n" unless opts[:no_line_return]
   end
 
   def ptr_type type

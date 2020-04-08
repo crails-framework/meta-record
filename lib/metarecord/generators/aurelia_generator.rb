@@ -71,7 +71,7 @@ class AureliaGenerator < GeneratorBase
         field[:required] = options[:validate][:required] unless options[:validate][:required].nil?
       end
       @fields << field
-      _append field.to_json
+      _append field.to_json, no_line_return: true
     end
   end
 
@@ -86,7 +86,7 @@ class AureliaGenerator < GeneratorBase
          field[:required] = options[:validate][:required] unless options[:validate][:required].nil?
       end
       @fields << field
-      _append field.to_json
+      _append field.to_json, no_line_return: true
     end
   end
 
@@ -100,7 +100,7 @@ class AureliaGenerator < GeneratorBase
         type: "array[#{type}]",
         label: name
       })
-      _append @fields.last.to_json
+      _append @fields.last.to_json, no_line_return: true
     end
   end
 
