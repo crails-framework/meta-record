@@ -25,7 +25,8 @@ class GeneratorBase
     def prepare inputs_dir, output_dir, base_path
       @base_path = base_path
       @output_dir = output_dir
-      Includes.list ||= {}
+      Includes.reset
+      Model.reset
       inputs_dir.each do |input_dir|
         load_all_models input_dir
       end

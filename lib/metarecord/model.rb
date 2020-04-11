@@ -17,6 +17,10 @@ class Model
     def list
       @list || []
     end
+
+    def reset
+      @list = nil
+    end
   end
 end
 
@@ -24,6 +28,10 @@ class Includes
   class << self
     attr_accessor :list
     attr_accessor :headers
+
+    def reset
+      list = headers = nil
+    end
   end
 end
 
