@@ -93,6 +93,10 @@ class GeneratorBase
     true
   end
 
+  def should_generate_from_manifest
+    false
+  end
+
   def reset
     @tab_size = 2
     @indent = 0
