@@ -24,7 +24,7 @@ module RailsTableHelpers
   end
 
   def create_column model_name, column_name, data
-    column_operation 'create', model_name, column_name, data
+    column_operation 'add', model_name, column_name, data
   end
 
   def update_column model_name, column_name, data
