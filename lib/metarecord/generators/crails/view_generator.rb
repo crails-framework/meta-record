@@ -42,7 +42,8 @@ class CrailsViewGenerator < GeneratorBase
       _append "if (model.get_#{name}())"
       _append "  json(\"#{name}_id\", model.get_#{name}()->get_id());"
     else
-      _append "json(\"#{name}_id\", model.get_#{name}_id());"
+      _append "if (model.get_#{name}_id() != 0)"
+      _append "  json(\"#{name}_id\", model.get_#{name}_id());"
     end
   end
 
