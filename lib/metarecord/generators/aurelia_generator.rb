@@ -133,8 +133,16 @@ class AureliaGenerator < GeneratorBase
 
     def is_file_based? ; false ; end
 
+    def model_import_path
+      if defined? METARECORD_AURELIA_MODEL_IMPORT
+        METARECORD_AURELIA_MODEL_IMPORT
+      else
+        "aurelia-metarecord"
+      end
+    end
+
     def make_file filename, data
-      src  = "import {Model} from 'aurelia-metarecord';\n"
+      src  = "import {Model} from '#{model_import_path}';\n"
       src += "import {Fields} from 'aurelia-metarecord';\n\n"
       src + (data[:bodies].join "\n")
     end
