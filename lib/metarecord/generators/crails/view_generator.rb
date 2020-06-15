@@ -38,12 +38,12 @@ class CrailsViewGenerator < GeneratorBase
 
   def has_one type, name, options = {}
     return if (not options[:client].nil?) && options[:client][:ignore] == true
-    if options[:db].nil? || options[:db][:joined] == false
-      _append "if (model.get_#{name}())"
-      _append "  json(\"#{name}_id\", model.get_#{name}()->get_id());"
-    else
+    if options[:joined] == false
       _append "if (model.get_#{name}_id() != 0)"
       _append "  json(\"#{name}_id\", model.get_#{name}_id());"
+    else
+      _append "if (model.get_#{name}())"
+      _append "  json(\"#{name}_id\", model.get_#{name}()->get_id());"
     end
   end
 
@@ -52,10 +52,10 @@ class CrailsViewGenerator < GeneratorBase
     _append "{"
     @indent += 1
     id_attr = (get_singular_name name) + "_ids"
-    id_collector = if options[:db].nil? || options[:db][:joined] == false
-                     "collect_ids_from(model.get_#{name}())"
-                   else
+    id_collector = if options[:joined] == false
                      "model.get_#{id_attr}()"
+                   else
+                     "collect_ids_from(model.get_#{name}())"
                    end
     _append "const auto relation_ids = #{id_collector};"
     _append "json_array(#{id_attr.inspect}, relation_ids.begin(), relation_ids.end());"
