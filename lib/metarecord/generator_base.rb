@@ -162,7 +162,7 @@ class GeneratorBase
 
   def visibility name ;; end
   def resource_name name ;; end
-  def order_by name ;; end
+  def order_by name, flow = nil ;; end
   def property type, name, options = {} ;; end
   def has_one type, name, options = {} ;; end
   def has_many type, name, options = {} ;; end

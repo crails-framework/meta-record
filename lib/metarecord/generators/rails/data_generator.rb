@@ -79,8 +79,13 @@ class RailsDataGenerator < GeneratorBase
     _append "RESOURCE_NAME = #{name.to_s.inspect}"
   end
 
-  def order_by name
-    _append "scope :default_order, -> { order(#{name.to_s.inspect}) }"
+  def order_by name, flow = nil
+    src = if flow.nil?
+      name.to_s.inspect
+    else
+      "#{name}: :#{flow}"
+    end
+    _append "scope :default_order, -> { order(#{src}) }"
   end
 
   def property type, name, options = {}

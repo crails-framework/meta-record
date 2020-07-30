@@ -114,8 +114,11 @@ class CrailsDataGenerator < GeneratorBase
     _append "static const std::string view;"
   end
 
-  def order_by name
-    @src[:public] = @src[:public].gsub /^(\s*).*\/\/ order_by$/, '\1' + "return query + \"ORDER BY\" + QUERY::#{name};"
+  def order_by name, flow = nil
+    src = "return query + \"ORDER BY\" + QUERY::#{name}"
+    src += " + \"#{flow.to_s.upcase}\"" unless flow.nil?
+    src += ";"
+    @src[:public] = @src[:public].gsub /^(\s*).*\/\/ order_by$/, '\1' + src
   end
 
   def datatree_property name, options
