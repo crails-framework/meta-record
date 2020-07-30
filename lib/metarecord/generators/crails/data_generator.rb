@@ -181,7 +181,7 @@ class CrailsDataGenerator < GeneratorBase
         _append "void set_#{name}_id(ODB::id_type v) { #{name}_id = v; }"
       end
       make_pragma_db options[:db] unless options[:db].nil?
-      _append "ODB::id_type #{name}_id;"
+      _append "ODB::id_type #{name}_id = ODB_NULL_ID;"
     end
     with_visibility :public do
       _append <<CPP
