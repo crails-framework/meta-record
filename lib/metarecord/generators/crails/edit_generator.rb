@@ -143,7 +143,7 @@ class CrailsEditGenerator < GeneratorBase
     tptr = ptr_type type
     _append "void #{@klassname}::set_#{name}(#{tptr} v)"
     _append "{"
-    _append "  #{name}_id = v->get_id();"
+    _append "  #{name}_id = v != nullptr ? v->get_id() : ODB_NULL_ID;"
     _append "}\n"
   end
 
