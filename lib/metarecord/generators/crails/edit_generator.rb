@@ -255,7 +255,7 @@ class CrailsEditGenerator < GeneratorBase
     _append "void #{@klassname}::remove_#{singular_name}(const #{type}& resource)"
     _append "{"
     @indent += 1
-    _append "#{name}.remove_if([resource](#{tptr} comp)"
+    _append "#{name}.remove_if([&resource](#{tptr} comp)"
     _append "{"
     @indent += 1
     _append "return comp->get_id() == resource.get_id();"
