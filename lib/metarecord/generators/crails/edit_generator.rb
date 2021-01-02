@@ -73,7 +73,8 @@ class CrailsEditGenerator < GeneratorBase
 
   def resource_name name
     if @rendering_has_many
-      _append "const std::string #{@klassname}::scope = #{name.inspect};"
+      _append "const std::string #{@klassname}::scope = #{name.to_s.inspect};"
+      _append "const std::string #{@klassname}::plural_scope = #{(get_pluralized_name name.to_s).inspect};"
       _append "const std::string #{@klassname}::view = \"${view-placeholder}/data/#{@modelname}\";"
     end
   end

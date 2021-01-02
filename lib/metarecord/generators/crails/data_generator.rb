@@ -111,6 +111,7 @@ class CrailsDataGenerator < GeneratorBase
   def resource_name name
     visibility :public
     _append "static const std::string scope;"
+    _append "static const std::string plural_scope;"
     _append "static const std::string view;"
   end
 
