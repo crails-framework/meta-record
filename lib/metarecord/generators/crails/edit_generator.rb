@@ -147,6 +147,22 @@ class CrailsEditGenerator < GeneratorBase
     _append "}\n"
   end
 
+  def joined_has_one_edit type, name, options
+    tptr = ptr_type type
+    data_id = "data[\"#{name}_id\"]"
+    _append "{"
+    _append "  if (#{data_id} == 0)"
+    _append "    set_#{name}(nullptr);"
+    _append "  else if (!get_#{name}() || #{data_id} != get_#{name}()->get_id())"
+    _append "  {"
+    _append "    auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;"
+    _append "    #{tptr} linked_resource;"
+    _append "    database.find_one(linked_resource, data[\"#{name}_id\"].as<ODB::id_type>());"
+    _append "    set_#{name}(linked_resource);"
+    _append "  }"
+    _append "}"
+  end
+
   def has_one type, name, options = {}
     type = get_type type
     tptr = ptr_type type
@@ -179,17 +195,7 @@ class CrailsEditGenerator < GeneratorBase
       data_id = "data[\"#{name}_id\"]"
       _append "if (#{data_id}.exists())"
       if options[:joined] != false
-        _append "{"
-        _append "  if (#{data_id} == 0)"
-        _append "    set_#{name}(nullptr);"
-        _append "  else if (!get_#{name}() || #{data_id} != get_#{name}()->get_id())"
-        _append "  {"
-        _append "    auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;"
-        _append "    #{tptr} linked_resource;"
-        _append "    database.find_one(linked_resource, data[\"#{name}_id\"].as<ODB::id_type>());"
-        _append "    set_#{name}(linked_resource);"
-        _append "  }"
-        _append "}"
+        joined_has_one_edit type, name, options
       else
         _append "set_#{name}_id(data[\"#{name}_id\"]);"
       end

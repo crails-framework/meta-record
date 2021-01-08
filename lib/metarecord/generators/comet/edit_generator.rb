@@ -8,6 +8,7 @@ class CometEditGenerator < CrailsEditGenerator
 
   def generate_json_methods object
     super
+    @rendering_from_json = true
     _append_macro "#ifdef #{CometDataGenerator.client_define}"
     _append "void #{@klassname}::from_json(Data data)"
     _append "{"
@@ -17,6 +18,7 @@ class CometEditGenerator < CrailsEditGenerator
     @indent -= 1
     _append "}"
     _append_macro "#endif"
+    @rendering_from_json = false
   end
 
   def validation type, name, data
@@ -41,6 +43,31 @@ class CometEditGenerator < CrailsEditGenerator
     _append "  model->set_id(get_#{name}_id());"
     _append "  model->fetch();"
     _append "  return model;"
+    _append "}"
+    _append_macro "#endif" 
+  end
+
+  def joined_has_one_edit type, name, options
+    data_id     = "data[\"#{name}_id\"]"
+    inline_data = "data[\"#{name}\"]"
+    _append_macro "#ifndef #{CometDataGenerator.client_define}"
+    super
+    _append_macro "#else"
+    _append "{"
+    _append "  if (#{data_id} == 0)"
+    _append "    set_#{name}(nullptr);"
+    _append "  else if (!get_#{name}() || #{data_id} != get_#{name}()->get_id())"
+    _append "  {"
+    _append "    auto linked_resource = std::make_shared<#{type}>();"
+    _append "    linked_resource->set_id(#{data_id}.as<ODB::id_type>());"
+    _append "    set_#{name}(linked_resource);"
+    _append "  }"
+    _append "}"
+    _append "else if (#{inline_data}.exists())"
+    _append "{"
+    _append "  auto linked_resource = std::make_shared<#{type}>();"
+    _append "  linked_resource->from_json(#{inline_data});"
+    _append "  set_#{name}(linked_resource);"
     _append "}"
     _append_macro "#endif" 
   end
