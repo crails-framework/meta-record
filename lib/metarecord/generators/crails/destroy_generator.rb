@@ -57,13 +57,13 @@ class CrailsDestroyGenerator < GeneratorBase
       source += "\n" + (data[:bodies].join "\n")
     end
   end
-      
+
   def generate_for object
     reset
     CrailsDestroyGenerator.my_prepare if CrailsDestroyGenerator.destroy_data.nil?
     @finalclass = object[:classname]
     @klassname = get_classname(object)
-    _append "void #{@klassname}::on_dependent_destroy(ODB::id_type self_id)"
+    _append "void #{@klassname}::on_dependent_destroy(#{id_type} self_id)"
     _append "{"
     unless object[:classname].nil?
       @indent += 1
@@ -145,7 +145,7 @@ class CrailsDestroyGenerator < GeneratorBase
       _append "}"
     else
       _append "typedef odb::query<#{relation[:class]}> Query;"
-      _append "std::vector<ODB::id_type> ids = { self_id };"
+      _append "std::vector<#{id_type}> ids = { self_id };"
       _append "odb::result<#{relation[:class]}> models;"
       _append "Query query;\n"
       id_field = "#{get_singular_name relation[:field]}_ids"

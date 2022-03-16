@@ -143,7 +143,7 @@ class CrailsEditGenerator < GeneratorBase
     tptr = ptr_type type
     _append "void #{@klassname}::set_#{name}(#{tptr} v)"
     _append "{"
-    _append "  #{name}_id = v != nullptr ? v->get_id() : ODB_NULL_ID;"
+    _append "  #{name}_id = v != nullptr ? v->get_id() : #{null_id};"
     _append "}\n"
   end
 
@@ -151,13 +151,13 @@ class CrailsEditGenerator < GeneratorBase
     tptr = ptr_type type
     data_id = "data[\"#{name}_id\"]"
     _append "{"
-    _append "  if (#{data_id} == 0)"
+    _append "  if (#{data_id} == #{null_id})"
     _append "    set_#{name}(nullptr);"
     _append "  else if (!get_#{name}() || #{data_id} != get_#{name}()->get_id())"
     _append "  {"
     _append "    auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;"
     _append "    #{tptr} linked_resource;"
-    _append "    database.find_one(linked_resource, data[\"#{name}_id\"].as<ODB::id_type>());"
+    _append "    database.find_one(linked_resource, data[\"#{name}_id\"].as<#{id_type}>());"
     _append "    set_#{name}(linked_resource);"
     _append "  }"
     _append "}"
@@ -171,15 +171,15 @@ class CrailsEditGenerator < GeneratorBase
         has_one_getter type, name, options
         has_one_setter type, name, options
       else
-        _append "ODB::id_type #{@klassname}::get_#{name}_id() const"
+        _append "#{id_type} #{@klassname}::get_#{name}_id() const"
         _append "{"
-        _append "  return #{name} ? #{name}->get_id() : 0;"
+        _append "  return #{name} ? #{name}->get_id() : #{null_id};"
         _append "}\n"
       end
     elsif @rendering_validations
       if not options[:validate].nil?
         if options[:joined] == false
-          validation "ODB::id_type", "#{name}_id", options[:validate]
+          validation "#{id_type}", "#{name}_id", options[:validate]
         else
           validation tptr, name, options[:validate]
         end
@@ -210,7 +210,7 @@ class CrailsEditGenerator < GeneratorBase
       else
         _id_based_has_many type, name, options
       end
-      _append "void #{@klassname}::collect_#{name}(std::map<ODB::id_type, #{ptr_type type}>& results)"
+      _append "void #{@klassname}::collect_#{name}(std::map<#{id_type}, #{ptr_type type}>& results)"
       _append "{"
       @indent += 1
       _append "for (auto model : get_#{name}())"
@@ -224,19 +224,19 @@ class CrailsEditGenerator < GeneratorBase
       _append "}"
     elsif @rendering_validations
     elsif @rendering_to_json
-      _append "data[\"#{get_singular_name name}_ids\"].from_vector<ODB::id_type>(get_#{get_singular_name name}_ids());"
+      _append "data[\"#{get_singular_name name}_ids\"].from_vector<#{id_type}>(get_#{get_singular_name name}_ids());"
     elsif options[:read_only] != true
       data = "data[\"#{get_singular_name name}_ids\"]"
       _append "if (#{data}.exists())"
       _append "  update_#{name}(#{data});"
     end
   end
-  
+
   def _join_based_has_many type, name, options
     tptr = ptr_type type
     list_type = "std::list<#{tptr} >"
     singular_name = get_singular_name name
-    _append "std::vector<ODB::id_type> #{@klassname}::get_#{singular_name}_ids() const"
+    _append "std::vector<#{id_type}> #{@klassname}::get_#{singular_name}_ids() const"
     _append "{"
     @indent += 1
     _append "return collect_ids_from(get_#{name}());"
@@ -293,7 +293,7 @@ class CrailsEditGenerator < GeneratorBase
     _append "void #{@klassname}::remove_#{singular_name}(const #{type}& v)"
     _append "{"
     @indent += 1
-    _append "auto it = remove_if(#{singular_name}_ids.begin(), #{singular_name}_ids.end(), [v](ODB::id_type id)"
+    _append "auto it = remove_if(#{singular_name}_ids.begin(), #{singular_name}_ids.end(), [v](#{id_type} id)"
     _append "{"
     @indent += 1
     _append "return id == v.get_id();"

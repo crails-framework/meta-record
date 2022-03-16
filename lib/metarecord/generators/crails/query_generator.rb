@@ -40,7 +40,7 @@ class CrailsQueryGenerator < GeneratorBase
       _join_based_has_many type, name, options
     end
   end
-  
+
   def _join_based_has_many type, name, options
     tptr = ptr_type type
     list_type = "std::list<#{tptr} >"
@@ -54,7 +54,7 @@ class CrailsQueryGenerator < GeneratorBase
   struct #{query_object}
   {
     std::string get_database_name() const { return #{type}().get_database_name(); }
-    ODB::id_type get_id() const { return self ? self->get_id() : 0; }
+    #{id_type} get_id() const { return self ? self->get_id() : #{null_id}; }
     std::shared_ptr<#{@finalklass}> self;
     operator #{@finalklass}() const { return *self; }
 

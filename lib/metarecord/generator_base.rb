@@ -110,6 +110,18 @@ class GeneratorBase
     @indent -= 1
   end
 
+  def unindent &block
+    @indent -= 1
+    block.call
+    @indent += 1
+  end
+
+  def make_block delimiters = '{}', &block
+    _append delimiters[0] if delimiters.size > 0
+    indent block
+    _append delimiters[1] if delimiters.size > 1
+  end
+
   def _append str, opts = {}
     @src += " " * (@indent * @tab_size)
     @src += str
@@ -158,6 +170,22 @@ class GeneratorBase
 
   def get_classname object
     "#{METARECORD_NAMESPACE}::#{object[:name]}"
+  end
+
+  def id_type
+    if defined? METARECORD_ID_TYPE
+      METARECORD_ID_TYPE
+    else
+      "ODB::id_type"
+    end
+  end
+
+  def null_id
+    if defined? METARECORD_NULL_ID
+      METARECORD_NULL_ID
+    else
+      "ODB_NULL_ID"
+    end
   end
 
   def visibility name ;; end

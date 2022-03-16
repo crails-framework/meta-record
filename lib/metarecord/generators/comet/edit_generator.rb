@@ -13,7 +13,7 @@ class CometEditGenerator < CrailsEditGenerator
     _append "void #{@klassname}::from_json(Data data)"
     _append "{"
     @indent += 1
-    _append "id = data[\"id\"].defaults_to<ODB::id_type>(ODB_NULL_ID);"
+    _append "id = data[\"id\"].defaults_to<#{id_type}>(#{null_id});"
     _append "edit(data);"
     @indent -= 1
     _append "}"
@@ -44,7 +44,7 @@ class CometEditGenerator < CrailsEditGenerator
     _append "  model->fetch();"
     _append "  return model;"
     _append "}"
-    _append_macro "#endif" 
+    _append_macro "#endif"
   end
 
   def joined_has_one_edit type, name, options
@@ -59,7 +59,7 @@ class CometEditGenerator < CrailsEditGenerator
     _append "  else if (!get_#{name}() || #{data_id} != get_#{name}()->get_id())"
     _append "  {"
     _append "    auto linked_resource = std::make_shared<#{type}>();"
-    _append "    linked_resource->set_id(#{data_id}.as<ODB::id_type>());"
+    _append "    linked_resource->set_id(#{data_id}.as<#{id_type}>());"
     _append "    set_#{name}(linked_resource);"
     _append "  }"
     _append "}"
@@ -69,13 +69,13 @@ class CometEditGenerator < CrailsEditGenerator
     _append "  linked_resource->from_json(#{inline_data});"
     _append "  set_#{name}(linked_resource);"
     _append "}"
-    _append_macro "#endif" 
+    _append_macro "#endif"
   end
 
   def has_many_fetch type, name, options
     tptr = ptr_type type
     singular_name = get_singular_name name
- 
+
     _append_macro "#ifndef #{CometDataGenerator.client_define}"
     super type, name, options
     _append_macro "#else"
@@ -96,7 +96,7 @@ class CometEditGenerator < CrailsEditGenerator
     _append "return Comet::Promise::all(promises);"
     @indent -= 1
     _append "}"
-    _append_macro "#endif" 
+    _append_macro "#endif"
   end
 
   def property type, name, options = {}

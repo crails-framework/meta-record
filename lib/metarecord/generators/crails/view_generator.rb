@@ -18,7 +18,7 @@ class CrailsViewGenerator < GeneratorBase
     reset
     @declarations << "#include \"#{object[:header]}\"\n"
     @declarations << "#{object[:classname]}& @model;"
-    property "ODB::id_type", "id"
+    property id_type, "id"
     self.instance_eval &object[:block]
     @src
   end

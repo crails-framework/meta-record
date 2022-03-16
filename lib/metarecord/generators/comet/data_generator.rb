@@ -18,12 +18,12 @@ class CometDataGenerator < CrailsDataGenerator
   def edit_resource_declaration
     with_visibility :protected do
       _append_macro "#ifdef #{self.class.client_define}"
-      _append "ODB::id_type id = ODB_NULL_ID;"
+      _append "#{id_type} id = #{null_id};"
       _append_macro "#endif"
     end
     _append_macro "#ifdef #{self.class.client_define}"
-    _append "ODB::id_type get_id() const { return id; }"
-    _append "void         set_id(ODB::id_type value) { id = value; }"
+    _append "#{id_type} get_id() const { return id; }"
+    _append "void         set_id(#{id_type} value) { id = value; }"
     _append "void         from_json(Data data);"
     _append "virtual std::vector<std::string> find_missing_parameters(Data) const;"
     _append "virtual void                     edit(Data);"
