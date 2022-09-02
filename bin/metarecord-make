@@ -20,6 +20,15 @@ OptionParser.new do |opts|
   opts.on "-i PATH",       "--source-path=PATH" do |v| @input      = v.split(",") end
   opts.on "-g GENERATORS", "--use=GENERATORS"   do |v| @generators = v.split(",") end
   opts.on "-z PATH",       "--tmp-dir=PATH"     do |v| @tmpdir     = v end
+  opts.on "-l",            "--list-generators" do
+    root = Gem::Specification.find_by_name("meta-record").gem_dir + "/lib/metarecord/generators/"
+    list = Dir[root + "**/*"]
+      .select {|file| file =~ /.*_generator\.rb$/}
+      .collect{|file| file.gsub(root, '')}
+      .collect{|file| file.gsub /(.*)_generator.rb$/, '\1'}
+    puts (list.join "\n")
+    exit
+  end
   opts.on "-h"             "--help" do
     puts opts
     exit
