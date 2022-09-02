@@ -330,7 +330,7 @@ class CrailsEditGenerator < GeneratorBase
     _append "odb::result<#{type}> results;"
     _append "#{name}.clear();"
     _append "database.find<#{type}>(results,"
-    _append "  query::id + \"=\" + ODB::any(#{singular_name}_ids, \"int\")"
+    _append "  query::id + \"=\" + Crails::Odb::any(#{singular_name}_ids, \"int\")"
     _append ");"
     _append "for (auto model : results)"
     _append "  #{name}.push_back(std::make_shared<#{type}>(model));"
@@ -343,7 +343,7 @@ class CrailsEditGenerator < GeneratorBase
     def extension ; ".cpp" ; end
 
     def generate_includes
-      source  = "#include <crails/models/helpers.hpp>\n"
+      source  = "#include <crails/odb/helpers.hpp>\n"
       source += "#include <crails/odb/any.hpp>\n"
       source += "#include <#{GeneratorBase.odb_connection[:include]}>\n"
       source += "#include \"lib/odb/application-odb.hxx\"\n"

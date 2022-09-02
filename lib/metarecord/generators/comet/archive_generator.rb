@@ -41,7 +41,7 @@ class CometArchiveGenerator < GeneratorBase
   def generate_archive_views object
     @src += "\n"
     ptr_type = "#{object[:classname]}*"
-    funcname_prefix = "render_#{object[:classname].underscore}"
+    funcname_prefix = "render_#{object[:classname].gsub(/^::/,'').underscore}"
     funcname = "#{funcname_prefix}_show_archive"
     _append "#ifndef #{self.class.client_define}"
     _append "std::string #{funcname}(const Crails::Renderer* renderer, Crails::SharedVars& vars)"

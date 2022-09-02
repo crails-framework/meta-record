@@ -1,3 +1,4 @@
+
 require 'metarecord/model'
 require 'metarecord/generator_base'
 
@@ -49,7 +50,7 @@ class CrailsDestroyGenerator < GeneratorBase
       include = "lib/" + filename[0...-2] + "hpp"
       source  = "#include \"#{include}\"\n"
       source += "#include \"lib/#{filename[0...-2]}queries.hpp\"\n"
-      source += "#include <crails/models/helpers.hpp>\n"
+      source += "#include <crails/odb/helpers.hpp>\n"
       source += "#include <crails/odb/any.hpp>\n"
       source += "#include <#{GeneratorBase.odb_connection[:include]}>\n"
       source += "#include \"lib/odb/application-odb.hxx\"\n"
@@ -149,7 +150,7 @@ class CrailsDestroyGenerator < GeneratorBase
       _append "odb::result<#{relation[:class]}> models;"
       _append "Query query;\n"
       id_field = "#{get_singular_name relation[:field]}_ids"
-      _append "query = Query::#{id_field} + \"@>\" + ODB::array_to_string(ids, \"int\");"
+      _append "query = Query::#{id_field} + \"@>\" + Crails::Odb::array_to_string(ids, \"int\");"
       _append "database.find<#{relation[:class]}>(models, query);"
       _append "for (auto model : odb::to_vector<#{relation[:class]}>(models))"
       _append "{"

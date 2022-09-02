@@ -14,7 +14,7 @@ module ::Guard
       @input          = options[:input]
       @output         = options[:output]
       @generators     = options[:generators]
-      @odb_connection = options[:odb_connection] || { object: "ODB::Connection", include: "crails/odb/connection.hpp" }
+      @odb_connection = options[:odb_connection]
       @input          = [@input] if @input.class != Array
       @tmpdir         = ".tmp"
     end

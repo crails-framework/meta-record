@@ -28,7 +28,7 @@ class ManifestGenerator < GeneratorBase
     db_options  = options[:db] || Hash.new
     column_name = db_options[:column] || "#{name}_id"
     db_options.delete :column
-    @current_manifest_item[column_name] = { type: "ODB::id_type", options: db_options }
+    @current_manifest_item[column_name] = { type: "Crails::Odb::id_type", options: db_options }
   end
 
   def has_many type, name, options = {}

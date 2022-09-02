@@ -58,7 +58,7 @@ CPP
 if (#{name} == nullptr)
   errors["#{name}_id"]["t"] = "validate.required";
 CPP
-  elsif type == "ODB::id_type"
+  elsif type == "Crails::Odb::id_type"
 <<CPP
 if (#{name} == 0)
   errors["#{name}"]["t"] = "validate.required";

@@ -1,23 +1,23 @@
 module RailsTypeHelpers
   def get_record_type type
     case type
-    when "ODB::id_type"       then :bigint
-    when "char"               then :tinyint
-    when "unsigned char"      then :smallint
-    when "short"              then :smallint
-    when "unsigned short"     then :mediumint
-    when "int"                then :integer
-    when "unsigned int"       then :integer
-    when "long"               then :bigint
-    when "long long"          then :bigint
-    when "unsigned long"      then :bigint
-    when "unsigned long long" then :bigint
-    when "double"             then :float
-    when "long double"        then :float
-    when "float"              then :float
-    when "bool"               then :boolean
-    when "std::string"        then :string
-    when "std::time_t"        then :timestamp
+    when "Crails::Odb::id_type" then :bigint
+    when "char"                 then :tinyint
+    when "unsigned char"        then :smallint
+    when "short"                then :smallint
+    when "unsigned short"       then :mediumint
+    when "int"                  then :integer
+    when "unsigned int"         then :integer
+    when "long"                 then :bigint
+    when "long long"            then :bigint
+    when "unsigned long"        then :bigint
+    when "unsigned long long"   then :bigint
+    when "double"               then :float
+    when "long double"          then :float
+    when "float"                then :float
+    when "bool"                 then :boolean
+    when "std::string"          then :string
+    when "std::time_t"          then :timestamp
     else nil
     end
   end

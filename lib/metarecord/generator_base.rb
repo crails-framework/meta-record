@@ -176,7 +176,7 @@ class GeneratorBase
     if defined? METARECORD_ID_TYPE
       METARECORD_ID_TYPE
     else
-      "ODB::id_type"
+      "Crails::Odb::id_type"
     end
   end
 

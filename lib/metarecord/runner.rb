@@ -12,7 +12,7 @@ module MetaRecordRunner
     end
     `rm -Rf #{@tmpdir} && mkdir -p #{@tmpdir}`
     GeneratorBase.prepare @input, @tmpdir, @base_path
-    GeneratorBase.odb_connection = @odb_connection
+    GeneratorBase.odb_connection = @odb_connection || { object: "Crails::Odb::Connection", include: "crails/odb/connection.hpp" }
     ManifestGenerator.new.generate "#{@tmpdir}/#{manifest_path}"
     @old_manifest = JSON.parse File.read(manifest_path) rescue {}
     @new_manifest = JSON.parse File.read("#{@tmpdir}/#{manifest_path}")
