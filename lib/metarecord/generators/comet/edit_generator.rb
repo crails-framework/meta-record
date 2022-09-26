@@ -138,7 +138,7 @@ class CometEditGenerator < CrailsEditGenerator
 #ifndef #{CometDataGenerator.client_define}
 #{super}
 #else
-# include <crails/comet/mvc/helpers.hpp>
+# include <crails/odb/helpers.hpp>
 #endif
 CPP
     end

@@ -137,7 +137,7 @@ class CrailsEditGenerator < GeneratorBase
     tptr = ptr_type type
     _append "#{tptr} #{@klassname}::get_#{name}() const"
     _append "{"
-    _append "  auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;"
+    _append "  #{GeneratorBase.odb_connection[:object]} database;"
     _append "  #{tptr} result;\n"
     _append "  database.find_one(result, #{name}_id);"
     _append "  return result;"
@@ -161,7 +161,7 @@ class CrailsEditGenerator < GeneratorBase
     _append "    set_#{name}(nullptr);"
     _append "  else if (!get_#{name}() || #{data_id} != get_#{name}()->get_id())"
     _append "  {"
-    _append "    auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;"
+    _append "    #{GeneratorBase.odb_connection[:object]} database;"
     _append "    #{tptr} linked_resource;"
     _append "    database.find_one(linked_resource, data[\"#{name}_id\"].as<#{id_type}>());"
     _append "    set_#{name}(linked_resource);"
@@ -332,7 +332,7 @@ class CrailsEditGenerator < GeneratorBase
     _append "{"
     @indent += 1
     _append "typedef odb::pgsql::query<#{type}> query;"
-    _append "auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;"
+    _append "#{GeneratorBase.odb_connection[:object]} database;"
     _append "odb::result<#{type}> results;"
     _append "#{name}.clear();"
     _append "database.find<#{type}>(results,"

@@ -70,7 +70,7 @@ class CrailsDestroyGenerator < GeneratorBase
       @indent += 1
       depended_by = CrailsDestroyGenerator.destroy_data[object[:classname]]
       if depended_by.class == Array
-        _append "auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;"
+        _append "#{GeneratorBase.odb_connection[:object]} database;"
         depended_by.each do |relation|
           _append "// #{relation[:class]}"
           _append "{"

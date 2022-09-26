@@ -25,7 +25,7 @@ def validate_uniqueness source_type, name
     type = source_type[16..-2]
 <<CPP
   {
-    auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;
+    #{GeneratorBase.odb_connection[:object]} database;
     odb::result<#{source_type}> results;
 
     database.find(results, odb::query<#{source_type}::#{name}->id == get_#{name}_id());
@@ -36,7 +36,7 @@ CPP
   else
 <<CPP
   {
-    auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;
+    #{GeneratorBase.odb_connection[:object]} database;
     odb::result<#{source_type}> results;
 
     database.find(results, odb::query<#{source_type}::#{name} == #{name});

@@ -27,6 +27,7 @@ class CometDataGenerator < CrailsDataGenerator
     _append "void         from_json(Data data);"
     _append "virtual std::vector<std::string> find_missing_parameters(Data) const;"
     _append "virtual void                     edit(Data);"
+    _append "virtual void                     merge_data(Data) const;"
     _append "virtual std::string              to_json() const;"
     _append "virtual bool                     is_valid();"
     _append_macro "#else"
@@ -65,7 +66,8 @@ class CometDataGenerator < CrailsDataGenerator
 <<CPP
 #{super}
 #ifdef #{client_define}
-# include <crails/comet/mvc/model.hpp>
+# include <comet/mvc/model.hpp>
+# include <comet/mvc/archive_model.hpp>
 # include <comet/promise.hpp>
 # ifndef #{client_super_class}
 #  define #{client_super_class} Comet::JsonModel
