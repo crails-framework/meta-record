@@ -15,6 +15,7 @@ end
 @tmpdir     = ".tmp"
 
 OptionParser.new do |opts|
+  opts.on "-v",            "--verbose"          do @verbose == true end
   opts.on "-o PATH",       "--output-path=PATH" do |v| @output     = v end
   opts.on "-b PATH",       "--base-path=PATH"   do |v| @base_path  = v end
   opts.on "-i PATH",       "--source-path=PATH" do |v| @input      = v.split(",") end

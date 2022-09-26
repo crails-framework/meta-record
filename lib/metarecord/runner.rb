@@ -37,7 +37,7 @@ module MetaRecordRunner
         puts "[metarecord] generated #{new_path}"
         `mkdir -p '#{File.dirname new_path}'`
         `cp '#{tmp_file}' '#{new_path}'`
-      else
+      elsif @verbose == true
         puts "[metarecord] no updates required for #{new_path}"
       end
     end
