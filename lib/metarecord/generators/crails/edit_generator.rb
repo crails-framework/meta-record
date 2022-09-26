@@ -36,11 +36,17 @@ class CrailsEditGenerator < GeneratorBase
 
   def generate_json_methods object
     @rendering_to_json = true
+    _append "void #{@klassname}::merge_data(Data data) const"
+    _append "{"
+    @indent += 1
+    self.instance_eval &object[:block]
+    @indent -= 1
+    _append "}\n"
     _append "std::string #{@klassname}::to_json() const"
     _append "{"
     @indent += 1
     _append "DataTree data;\n"
-    self.instance_eval &object[:block]
+    _append "merge_data(data);\n"
     _append "return data.to_json();"
     @indent -= 1
     _append "}\n"

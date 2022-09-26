@@ -70,6 +70,7 @@ class CrailsDataGenerator < GeneratorBase
   def edit_resource_declaration
     _append "virtual std::vector<std::string> find_missing_parameters(Data) const;"
     _append "virtual void                     edit(Data);"
+    _append "virtual void                     merge_data(Data) const;"
     _append "virtual std::string              to_json() const;"
     _append "virtual bool                     is_valid();"
     _append "virtual void                     on_dependent_destroy(#{id_type});"
