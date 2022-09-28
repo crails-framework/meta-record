@@ -28,7 +28,7 @@ class CrailsViewGenerator < GeneratorBase
   end
 
   def property type, name, options = {}
-    return if (not options[:client].nil?) && options[:client][:ignore] == true
+    return if should_skip_on_client? options
     if type == "DataTree" || type == "LocaleString"
       _append "json(#{name.inspect}, model.get_#{name}().as_data());"
     else
@@ -37,7 +37,7 @@ class CrailsViewGenerator < GeneratorBase
   end
 
   def has_one type, name, options = {}
-    return if (not options[:client].nil?) && options[:client][:ignore] == true
+    return if should_skip_on_client? options
     if options[:joined] == false
       _append "if (model.get_#{name}_id() != 0)"
       _append "  json(\"#{name}_id\", model.get_#{name}_id());"
@@ -48,7 +48,7 @@ class CrailsViewGenerator < GeneratorBase
   end
 
   def has_many type, name, options = {}
-    return if (not options[:client].nil?) && options[:client][:ignore] == true
+    return if should_skip_on_client? options
     _append "{"
     @indent += 1
     id_attr = (get_singular_name name) + "_ids"

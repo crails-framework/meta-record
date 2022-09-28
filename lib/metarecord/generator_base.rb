@@ -194,4 +194,8 @@ class GeneratorBase
   def property type, name, options = {} ;; end
   def has_one type, name, options = {} ;; end
   def has_many type, name, options = {} ;; end
+
+  def should_skip_on_client? options
+    (not options[:client].nil?) && options[:client][:ignore] == true
+  end
 end

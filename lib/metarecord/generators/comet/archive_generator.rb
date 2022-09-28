@@ -71,21 +71,24 @@ class CometArchiveGenerator < GeneratorBase
   end
 
   def property type, name, options = {}
+    return if should_skip_on_client? options
     @src += " & #{name}"
   end
 
   def has_one type, name, options = {}
+    return if should_skip_on_client? options
     if options[:joined] != false
-      puts "WARNING: unsupported joined has_one in metarecord/generators/comet/archive_generator"
+      @src += " & #{name}"
     else
       @src += " & #{name}_id"
     end
   end
 
   def has_many type, name, options = {}
+    return if should_skip_on_client? options
     singular_name = get_singular_name name
     if options[:joined] != false
-      puts "WARNING: unsupported joined has_many in metarecord/generators/comet/archive_generator"
+      @src += " & #{name}"
     else
       @src += " & #{singular_name}_ids"
     end
