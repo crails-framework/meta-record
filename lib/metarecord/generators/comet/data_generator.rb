@@ -70,7 +70,7 @@ class CometDataGenerator < CrailsDataGenerator
 # include <comet/mvc/archive_model.hpp>
 # include <comet/promise.hpp>
 # ifndef #{client_super_class}
-#  define #{client_super_class} Comet::JsonModel
+#  define #{client_super_class} Comet::JsonModel<>
 # endif
 #endif
 CPP
