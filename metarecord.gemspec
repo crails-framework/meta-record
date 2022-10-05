@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name         = 'meta-record'
-  s.version      = '1.0.3'
+  s.version      = '1.0.4'
   s.date         = '2020-03-23'
   s.summary      = 'MetaRecord is a database code generator from Crails Framework'
   s.description  = <<DESC
@@ -16,7 +16,7 @@ DESC
     name.match %r{^(bin|lib)/}
   end
   s.homepage     = 'https://github.com/crails-framework/meta-record'
-  s.license      = 'BSD'
+  s.license      = '0BSD'
   s.require_path = 'lib'
   s.bindir       = 'bin'
   s.executables << 'metarecord-make'
