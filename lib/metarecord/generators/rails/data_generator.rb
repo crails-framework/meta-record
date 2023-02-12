@@ -13,6 +13,10 @@ class RailsDataGenerator < GeneratorBase
       "ActiveRecord::Base"
     end
   end
+
+  def super_class
+    if @inherits.nil? then model_base_class else @inherits end
+  end
   
   def reset
     super
@@ -21,8 +25,9 @@ class RailsDataGenerator < GeneratorBase
 
   def generate_for object
     reset
+    @inherits = object[:inherits]
     indent do
-      _append "class #{object[:name]} < #{model_base_class}"
+      _append "class #{object[:name]} < #{super_class}"
       indent do
         _append "self.abstract_class = true"
         _append ""

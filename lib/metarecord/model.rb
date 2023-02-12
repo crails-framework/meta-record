@@ -10,8 +10,14 @@ class Model
         definition = { classname: definition.first, hpp: definition.last }
       end
       definition[:classname] ||= "::#{name}"
-      @list << { name: name, filename: current_file, block: block,
-                 classname: definition[:classname], header: definition[:hpp] }
+      @list << {
+        name: name,
+        filename: current_file,
+        classname: definition[:classname],
+        header: definition[:hpp],
+        inherits: definition[:inherits],
+        block: block,
+      }
     end
 
     def list
