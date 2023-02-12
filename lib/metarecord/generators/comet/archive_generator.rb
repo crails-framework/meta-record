@@ -44,18 +44,18 @@ class CometArchiveGenerator < GeneratorBase
     funcname_prefix = "render_#{object[:classname].gsub(/^::/,'').underscore}"
     funcname = "#{funcname_prefix}_show_archive"
     _append "#ifndef #{self.class.client_define}"
-    _append "std::string #{funcname}(const Crails::Renderer* renderer, Crails::SharedVars& vars)"
+    _append "void #{funcname}(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars& vars)"
     _append "{"
     @indent += 1
     _append "auto* model = Crails::cast<#{ptr_type}>(vars, \"model\");"
     _append "OArchive archive;\n"
     _append "model->serialize(archive);"
-    _append "return archive.as_string();"
+    _append "target.set_body(archive.as_string());"
     @indent -= 1
     _append "}\n"
 
     funcname = "#{funcname_prefix}_index_archive"
-    _append "std::string #{funcname}(const Crails::Renderer* renderer, Crails::SharedVars& vars)"
+    _append "void #{funcname}(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars& vars)"
     _append "{"
     @indent += 1
     _append "auto* models = Crails::cast<std::vector<#{object[:classname]}>*>(vars, \"models\");"
@@ -64,7 +64,7 @@ class CometArchiveGenerator < GeneratorBase
     _append "archive & size;"
     _append "for (auto& model : *models)"
     _append "  model.serialize(archive);"
-    _append "return archive.as_string();"
+    _append "target.set_body(archive.as_string());"
     @indent -= 1
     _append "}"
     _append "#endif"
