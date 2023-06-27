@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name         = 'meta-record'
-  s.version      = '1.0.6'
-  s.date         = '2023-02-12'
+  s.version      = '1.0.8'
+  s.date         = '2023-06-28'
   s.summary      = 'MetaRecord is a database code generator from Crails Framework'
   s.description  = <<DESC
   MetaRecord is a code generator that allows you to define your application

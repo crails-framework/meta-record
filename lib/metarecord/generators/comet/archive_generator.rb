@@ -28,7 +28,7 @@ class CometArchiveGenerator < GeneratorBase
     @src += ";\n"
     _append "}\n"
 
-    _append "void #{object[:classname]}::serialize(OArchive& archive)"
+    _append "void #{object[:classname]}::serialize(OArchive& archive) const"
     _append "{"
     @src += "  archive & id"
     self.instance_eval &object[:block]
@@ -59,11 +59,8 @@ class CometArchiveGenerator < GeneratorBase
     _append "{"
     @indent += 1
     _append "auto* models = Crails::cast<std::vector<#{object[:classname]}>*>(vars, \"models\");"
-    _append "OArchive archive;"
-    _append "unsigned long size = models->size();\n"
-    _append "archive & size;"
-    _append "for (auto& model : *models)"
-    _append "  model.serialize(archive);"
+    _append "OArchive archive;\n"
+    _append "archive & (*models);"
     _append "target.set_body(archive.as_string());"
     @indent -= 1
     _append "}"
