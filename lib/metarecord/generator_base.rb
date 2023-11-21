@@ -1,20 +1,7 @@
-class String
-  def underscore
-    self.gsub(/::/, '/').
-    gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-    gsub(/([a-z\d])([A-Z])/,'\1_\2').
-    tr("-", "_").
-    downcase
-  end
-
-  def camelcase
-    return self if self !~ /_/ && self =~ /[A-Z]+.*/
-    split(/_|\//).map{|e| e.capitalize}.join
-  end
-end
-
 require 'pathname'
 require 'json'
+require_relative './string'
+require_relative './properties'
 
 class GeneratorBase
   def self.is_file_based? ; true ; end
@@ -197,5 +184,24 @@ class GeneratorBase
 
   def should_skip_on_client? options
     (not options[:client].nil?) && options[:client][:ignore] == true
+  end
+end
+
+class GeneratorCppBase < GeneratorBase
+  def nativeTypeNameFor type
+    if type.class == Class
+      case type.name
+      when 'String'    then 'std::string'
+      when 'ByteArray' then 'std::string'
+      when 'Hash'      then 'DataTree'
+      when 'DateTime'  then 'std::time_t'
+      when 'Integer'   then 'int'
+      when 'Float'     then 'float'
+      when 'Boolean'   then 'bool'
+      else type
+      end
+    else
+      type
+    end
   end
 end
