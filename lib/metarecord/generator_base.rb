@@ -118,7 +118,7 @@ class GeneratorBase
 
   def make_block delimiters = '{}', &block
     _append delimiters[0] if delimiters.size > 0
-    indent block
+    indent &block
     _append delimiters[1] if delimiters.size > 1
   end
 
