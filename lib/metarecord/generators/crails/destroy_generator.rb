@@ -101,7 +101,7 @@ class CrailsDestroyGenerator < GeneratorBase
       _append "query = Query::#{relation[:field]}_id == self_id;"
     end
     _append "database.find<::#{relation[:class]}>(models, query);"
-    _append "for (auto model : odb::to_vector<::#{relation[:class]}>(models))"
+    _append "for (auto model : Crails::Odb::to_vector<::#{relation[:class]}>(models))"
     if relation[:options][:dependent] == :destroy
       _append "  database.destroy(model);"
     elsif relation[:options][:dependent] == :unlink
@@ -127,7 +127,7 @@ class CrailsDestroyGenerator < GeneratorBase
       _append "Query query;\n"
       _append "query = Query::#{klassname}::id == self_id;"
       _append "database.find<#{view_klass}>(models, query);"
-      _append "for (auto model : odb::to_vector<#{relation[:class]}, #{view_klass}>(models))"
+      _append "for (auto model : Crails::Odb::to_vector<#{relation[:class]}, #{view_klass}>(models))"
       _append "{"
       @indent += 1
       if relation[:options][:dependent] == :destroy
@@ -152,7 +152,7 @@ class CrailsDestroyGenerator < GeneratorBase
       id_field = "#{get_singular_name relation[:field]}_ids"
       _append "query = Query::#{id_field} + \"@>\" + Crails::Odb::array_to_string(ids, \"int\");"
       _append "database.find<#{relation[:class]}>(models, query);"
-      _append "for (auto model : odb::to_vector<#{relation[:class]}>(models))"
+      _append "for (auto model : Crails::Odb::to_vector<#{relation[:class]}>(models))"
       _append "{"
       @indent += 1
       if relation[:options][:dependent] == :destroy
