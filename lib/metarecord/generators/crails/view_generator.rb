@@ -64,7 +64,7 @@ class CrailsViewGenerator < GeneratorBase
   end
 
   class << self
-    def extension ; ".cjson" ; end
+    def extension ; ".json" ; end
 
     def make_file filename, data
       source = ""
