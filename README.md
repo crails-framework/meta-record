@@ -16,6 +16,25 @@ application development by generating most of the models code for you.
 It is also useful as a way to share the database structure data and the
 validations behaviors between frontend and backend.
 
+## Install
+
+```
+gem install 'meta-record'
+```
+
+```ruby
+source 'https://rubygems.org'
+
+gem 'meta-record', github: 'crails-framework/meta-record'
+```
+
+## Commands
+Use the `metarecord-make` command to generate code for your models:
+
+```sh
+  metarecord-make -i input/models -o output/models -g qt,aurelia
+```
+
 ## MetaRecord DSL
 Example of a model definition using MetaRecord's DSL:
 
