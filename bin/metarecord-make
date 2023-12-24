@@ -13,6 +13,7 @@ end
 @input      = []
 @generators = []
 @tmpdir     = ".tmp"
+$: << Dir.pwd
 
 OptionParser.new do |opts|
   opts.on "-v",            "--verbose"          do @verbose == true end
