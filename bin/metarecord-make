@@ -8,12 +8,18 @@ Dir["config/metarecord.rb"].each do |file|
   require "#{Dir.pwd}/#{file}"
 end
 
+config_filepath = "config/metarecord.rb"
+
 @base_path  = ""
 @output     = ""
 @input      = []
 @generators = []
 @tmpdir     = ".tmp"
 $: << Dir.pwd
+
+if File.exists? config_filepath
+  require_relative config_filepath
+end
 
 OptionParser.new do |opts|
   opts.on "-v",            "--verbose"          do @verbose == true end
