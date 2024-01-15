@@ -18,6 +18,7 @@ class CometArchiveGenerator < GeneratorBase
     reset
     _append "#ifndef #{self.class.client_define}"
     _append "# include <crails/renderer.hpp>"
+    _append "# include <crails/utils/backtrace.hpp>"
     _append "#endif"
     _append "#include <crails/archive.hpp>"
     _append "#include \"#{object[:header]}\"\n"
@@ -49,7 +50,10 @@ class CometArchiveGenerator < GeneratorBase
     @indent += 1
     _append "auto* model = Crails::cast<#{ptr_type}>(vars, \"model\");"
     _append "OArchive archive;\n"
-    _append "model->serialize(archive);"
+    _append "if (model)"
+    _append "  model->serialize(archive);"
+    _append "else"
+    _append "  throw boost_ext::runtime_error(\"Called #{funcname} with null model\");"
     _append "target.set_body(archive.as_string());"
     @indent -= 1
     _append "}\n"
