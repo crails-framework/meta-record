@@ -33,7 +33,7 @@ module MetaRecordRunner
     Dir["#{@tmpdir}/**/*"].each do |tmp_file|
       next if File.directory? tmp_file
       new_path = "#{@output}/#{tmp_file[@tmpdir.size + 1..tmp_file.size]}"
-      if (not File.exists?(new_path)) || File.read(new_path) != File.read(tmp_file)
+      if (not File.exist?(new_path)) || File.read(new_path) != File.read(tmp_file)
         puts "[metarecord] generated #{new_path}"
         `mkdir -p '#{File.dirname new_path}'`
         `cp '#{tmp_file}' '#{new_path}'`
@@ -46,7 +46,7 @@ module MetaRecordRunner
       Dir["#{@output}/#{input}/**/*"].each do |actual_file|
         next if File.directory? actual_file
         tmp_path = "#{@tmpdir}/#{@output[@output.size + 1..@output.size]}"
-        if not File.exists?(tmp_path)
+        if not File.exist?(tmp_path)
           puts "[metarecord] removed #{actual_file}"
           `rm '#{actual_file}'`
         end

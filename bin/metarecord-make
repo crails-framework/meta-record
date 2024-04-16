@@ -17,7 +17,7 @@ config_filepath = "#{Dir.pwd}/config/metarecord.rb"
 @tmpdir     = ".tmp"
 $: << Dir.pwd
 
-if File.exists? config_filepath
+if File.exist? config_filepath
   require config_filepath
 end
 
