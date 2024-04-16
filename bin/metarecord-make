@@ -8,7 +8,7 @@ Dir["config/metarecord.rb"].each do |file|
   require "#{Dir.pwd}/#{file}"
 end
 
-config_filepath = "config/metarecord.rb"
+config_filepath = "#{Dir.pwd}/config/metarecord.rb"
 
 @base_path  = ""
 @output     = ""
@@ -18,7 +18,7 @@ config_filepath = "config/metarecord.rb"
 $: << Dir.pwd
 
 if File.exists? config_filepath
-  require_relative config_filepath
+  require config_filepath
 end
 
 OptionParser.new do |opts|

@@ -1,13 +1,13 @@
 Gem::Specification.new do |s|
   s.name         = 'meta-record'
-  s.version      = '1.0.8'
-  s.date         = '2023-06-28'
+  s.version      = '1.0.11'
+  s.date         = '2024-04-12'
   s.summary      = 'MetaRecord is a database code generator from Crails Framework'
   s.description  = <<DESC
   MetaRecord is a code generator that allows you to define your application
   models using a Ruby-powered DSL, and generates various implementation for
   them, for your web server, client, or mobile application.
-  It can generates code for the following targests: Crails, ActiveRecord,
+  It can generate code for the following targests: Crails, Qt, ActiveRecord,
   Comet.cpp, and Aurelia.js.
 DESC
   s.authors      = ["Michael Martin Moro"]
