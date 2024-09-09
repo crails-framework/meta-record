@@ -68,6 +68,7 @@ class CometDataGenerator < CrailsDataGenerator
 #ifdef #{client_define}
 # include <comet/mvc/model.hpp>
 # include <comet/mvc/archive_model.hpp>
+# include <comet/mvc/json_model.hpp>
 # include <comet/promise.hpp>
 # ifndef #{client_super_class}
 #  define #{client_super_class} Comet::JsonModel<>
