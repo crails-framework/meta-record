@@ -91,8 +91,8 @@ class CrailsDestroyGenerator < GeneratorBase
   end
 
   def one_to_many relation
-    _append "typedef odb::query<::#{relation[:class]}> Query;"
-    _append "odb::result<::#{relation[:class]}> models;"
+    _append "typedef odb::query<#{relation[:class]}> Query;"
+    _append "odb::result<#{relation[:class]}> models;"
     _append "Query query;\n"
 
     if relation[:options][:joined] != false
@@ -100,8 +100,8 @@ class CrailsDestroyGenerator < GeneratorBase
     else
       _append "query = Query::#{relation[:field]}_id == self_id;"
     end
-    _append "database.find<::#{relation[:class]}>(models, query);"
-    _append "for (auto model : Crails::Odb::to_vector<::#{relation[:class]}>(models))"
+    _append "database.find<#{relation[:class]}>(models, query);"
+    _append "for (auto model : Crails::Odb::to_vector<#{relation[:class]}>(models))"
     if relation[:options][:dependent] == :destroy
       _append "  database.destroy(model);"
     elsif relation[:options][:dependent] == :unlink
