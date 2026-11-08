@@ -73,7 +73,7 @@ class CrailsDataGenerator < GeneratorBase
     _append "virtual void                     merge_data(Data) const;"
     _append "virtual std::string              to_json() const;"
     _append "virtual bool                     is_valid();"
-    _append "virtual void                     on_dependent_destroy(#{id_type});"
+    _append "virtual void                     on_dependent_destroy(Crails::Odb::Connection&, #{id_type});"
     _append ""
   end
 
@@ -278,6 +278,7 @@ CPP
 #{generate_includes}
 #{collect_includes_for(filename, true).join "\n"}
 namespace odb { class access; }
+namespace Crails::Odb { class Connection; }
 #{data[:headers].join ""}
 namespace #{METARECORD_NAMESPACE}
 {

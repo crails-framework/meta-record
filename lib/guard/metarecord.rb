@@ -1,6 +1,6 @@
 require 'metarecord/runner'
 
-Dir["config/metarecord.rb"].each do |file|
+Dir["{config,app/config}/metarecord.rb"].each do |file|
   require "#{Dir.pwd}/#{file}"
 end
 

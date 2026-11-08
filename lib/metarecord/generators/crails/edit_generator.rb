@@ -352,7 +352,7 @@ class CrailsEditGenerator < GeneratorBase
       source  = "#include <crails/odb/helpers.hpp>\n"
       source += "#include <crails/odb/any.hpp>\n"
       source += "#include <#{GeneratorBase.odb_connection[:include]}>\n"
-      source += "#include \"lib/odb/application-odb.hxx\"\n"
+      source += "#include \"app/autogen/odb/application-odb.hpp\"\n"
     end
 
     def make_file filename, data

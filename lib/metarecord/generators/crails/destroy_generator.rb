@@ -53,7 +53,7 @@ class CrailsDestroyGenerator < GeneratorBase
       source += "#include <crails/odb/helpers.hpp>\n"
       source += "#include <crails/odb/any.hpp>\n"
       source += "#include <#{GeneratorBase.odb_connection[:include]}>\n"
-      source += "#include \"lib/odb/application-odb.hxx\"\n"
+      source += "#include \"app/autogen/odb/application-odb.hpp\"\n"
       source += (collect_includes_for filename).join "\n"
       source += "\n" + (data[:bodies].join "\n")
     end
@@ -64,13 +64,12 @@ class CrailsDestroyGenerator < GeneratorBase
     CrailsDestroyGenerator.my_prepare if CrailsDestroyGenerator.destroy_data.nil?
     @finalclass = object[:classname]
     @klassname = get_classname(object)
-    _append "void #{@klassname}::on_dependent_destroy(#{id_type} self_id)"
+    _append "void #{@klassname}::on_dependent_destroy(Crails::Odb::Connection& database, #{id_type} self_id)"
     _append "{"
     unless object[:classname].nil?
       @indent += 1
       depended_by = CrailsDestroyGenerator.destroy_data[object[:classname]]
       if depended_by.class == Array
-        _append "#{GeneratorBase.odb_connection[:object]} database;"
         depended_by.each do |relation|
           _append "// #{relation[:class]}"
           _append "{"
