@@ -53,7 +53,7 @@ class CrailsQueryGenerator < GeneratorBase
   #pragma db view pointer(std::shared_ptr) object(#{type}) object(#{@finalklass} inner)
   struct #{query_object}
   {
-    std::string get_database_name() const { return #{type}().get_database_name(); }
+    decltype(auto) get_database_name() const { return #{type}().get_database_name(); }
     #{id_type} get_id() const { return self ? self->get_id() : #{null_id}; }
     std::shared_ptr<#{@finalklass}> self;
     operator #{@finalklass}() const { return *self; }
