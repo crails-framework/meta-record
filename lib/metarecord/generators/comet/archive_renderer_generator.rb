@@ -38,7 +38,7 @@ private
   end
 
   def make_renderer
-    filepath = "lib/renderers/archive.cpp"
+    filepath = "app/autogen/renderers/archive.cpp"
     src = <<CPP
 #include <crails/renderers/archive_renderer.hpp>
 #include <crails/archive.hpp>

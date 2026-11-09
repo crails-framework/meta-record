@@ -47,9 +47,9 @@ class CrailsDestroyGenerator < GeneratorBase
     def extension ; ".destroy.cpp" ; end
 
     def make_file filename, data
-      include = "lib/" + filename[0...-2] + "hpp"
+      include = "app/autogen/" + filename[0...-2] + "hpp"
       source  = "#include \"#{include}\"\n"
-      source += "#include \"lib/#{filename[0...-2]}queries.hpp\"\n"
+      source += "#include \"app/autogen/#{filename[0...-2]}queries.hpp\"\n"
       source += "#include <crails/odb/helpers.hpp>\n"
       source += "#include <crails/odb/any.hpp>\n"
       source += "#include <#{GeneratorBase.odb_connection[:include]}>\n"

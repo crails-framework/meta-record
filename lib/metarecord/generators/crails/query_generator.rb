@@ -72,7 +72,7 @@ CPP
     def extension ; ".queries.hpp" ; end
 
     def make_file filename, data
-      base = "lib/" + filename[0...-3]
+      base = "app/autogen/" + filename[0...-3]
       include = base + ".hpp"
       file_define = "_#{filename[0...-3].upcase.gsub "/", "_"}_QUERIES_HPP"
       source = <<CPP

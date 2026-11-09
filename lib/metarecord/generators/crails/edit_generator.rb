@@ -356,7 +356,7 @@ class CrailsEditGenerator < GeneratorBase
     end
 
     def make_file filename, data
-      base = "lib/" + filename[0...-3]
+      base = "app/autogen/" + filename[0...-3]
       include = base + ".hpp"
       data[:bodies].each do |body|
         body.gsub! "${view-placeholder}", base.split("/")[0...-2].join("/")
