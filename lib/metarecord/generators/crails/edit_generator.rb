@@ -64,8 +64,11 @@ class CrailsEditGenerator < GeneratorBase
     end
     @indent -= 1
     _append "}"
+    generate_is_valid object
+  end
 
-    _append "bool #{@klassname}::is_valid()"
+  def generate_is_valid object
+    _append "bool #{@klassname}::is_valid(Crails::Odb::Connection& database)"
     _append "{"
     @indent += 1
     _append "errors.clear();"

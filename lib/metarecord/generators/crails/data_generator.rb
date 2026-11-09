@@ -72,7 +72,7 @@ class CrailsDataGenerator < GeneratorBase
     _append "virtual void                     edit(Data);"
     _append "virtual void                     merge_data(Data) const;"
     _append "virtual std::string              to_json() const;"
-    _append "virtual bool                     is_valid();"
+    _append "virtual bool                     is_valid(Crails::Odb::Connection&);"
     _append "virtual void                     on_dependent_destroy(Crails::Odb::Connection&, #{id_type});"
     _append ""
   end

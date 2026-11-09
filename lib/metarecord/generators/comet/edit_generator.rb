@@ -21,6 +21,23 @@ class CometEditGenerator < CrailsEditGenerator
     @rendering_from_json = false
   end
 
+  def generate_is_valid object
+    _append_macro "#ifndef #{CometDataGenerator.client_define}"
+    super
+    _append_macro "#else"
+    _append "bool #{@klassname}::is_valid()"
+    _append "{"
+    @indent += 1
+    _append "errors.clear();"
+    @rendering_validations = true
+    self.instance_eval &object[:block]
+    @rendering_validations = false
+    _append "return errors.as_data().get_keys().size() == 0;"
+    @indent -= 1
+    _append "}"
+    _append_macro "#endif"
+  end
+
   def validation type, name, data
     if data[:uniqueness] == true
       _append_macro "#ifndef #{CometDataGenerator.client_define}"
