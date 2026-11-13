@@ -69,11 +69,11 @@ class CrailsDataGenerator < GeneratorBase
 
   def edit_resource_declaration
     _append "virtual std::vector<std::string> find_missing_parameters(Data) const;"
-    _append "virtual void                     edit(Data);"
+    _append "virtual void                     edit(#{GeneratorBase.odb_connection[:object]}&, Data);"
     _append "virtual void                     merge_data(Data) const;"
     _append "virtual std::string              to_json() const;"
-    _append "virtual bool                     is_valid(Crails::Odb::Connection&);"
-    _append "virtual void                     on_dependent_destroy(Crails::Odb::Connection&, #{id_type});"
+    _append "virtual bool                     is_valid(#{GeneratorBase.odb_connection[:object]}&);"
+    _append "virtual void                     on_dependent_destroy(#{GeneratorBase.odb_connection[:object]}&, #{id_type});"
     _append ""
   end
 
@@ -173,21 +173,7 @@ class CrailsDataGenerator < GeneratorBase
         _append "#{virt}#{tptr} get_#{name}() const { return #{name}; }"
         _append "#{virt}void set_#{name}(#{tptr} v) { this->#{name} = v; }"
         _append "#{virt}#{id_type} get_#{name}_id() const;"
-      end
-      _append "#{tptr} #{name};"
-    else
-      with_visibility :public do
-        _append "#{virt}#{tptr} get_#{name}() const;"
-        _append "#{virt}void set_#{name}(#{tptr} v);"
-        _append "#{id_type} get_#{name}_id() const { return #{name}_id; }"
-        _append "void set_#{name}_id(#{id_type} v) { #{name}_id = v; }"
-      end
-      make_pragma_db options[:db] unless options[:db].nil?
-      _append "#{id_type} #{name}_id = #{null_id};"
-    end
-    with_visibility :public do
-      _append <<CPP
-
+        _append <<CPP
     template<typename ARRAY>
     static void collect_#{name}(ARRAY& array, std::map<#{id_type}, #{tptr} >& results)
     {
@@ -197,8 +183,29 @@ class CrailsDataGenerator < GeneratorBase
           results[model.get_#{name}_id()] = model.get_#{name}();
       }
     }
-
 CPP
+    end
+      _append "#{tptr} #{name};"
+    else
+      with_visibility :public do
+        _append "#{virt}#{tptr} get_#{name}(#{GeneratorBase.odb_connection[:object]}&) const;"
+        _append "#{virt}void set_#{name}(#{tptr} v);"
+        _append "#{id_type} get_#{name}_id() const { return #{name}_id; }"
+        _append "void set_#{name}_id(#{id_type} v) { #{name}_id = v; }"
+        _append <<CPP
+    template<typename ARRAY>
+    static void collect_#{name}(#{GeneratorBase.odb_connection[:object]}& database, ARRAY& array, std::map<#{id_type}, #{tptr} >& results)
+    {
+      for (auto model : array)
+      {
+        if (results.find(model.get_#{name}_id()) == results.end())
+          results[model.get_#{name}_id()] = model.get_#{name}(database);
+      }
+    }
+CPP
+      end
+      make_pragma_db options[:db] unless options[:db].nil?
+      _append "#{id_type} #{name}_id = #{null_id};"
     end
   end
 
@@ -213,7 +220,11 @@ CPP
       _append "#{virt}bool update_#{name}(Data);"
       _append "#{virt}void add_#{singular_name}(#{tptr});"
       _append "#{virt}void remove_#{singular_name}(const #{type}&);"
-      _append "#{virt}void collect_#{name}(std::map<#{id_type}, #{tptr} >&);"
+      if options[:joined] != false
+        _append "#{virt}void collect_#{name}(std::map<#{id_type}, #{tptr} >&);"
+      else
+        _append "#{virt}void collect_#{name}(#{GeneratorBase.odb_connection[:object]}&, std::map<#{id_type}, #{tptr} >&);"
+      end
     end
     if options[:joined] != false
       _join_based_has_many list_type, name, options
@@ -233,7 +244,7 @@ CPP
 
   def has_many_fetch list_type, name, options
     with_visibility :public do
-      _append "void fetch_#{name}();"
+      _append "void fetch_#{name}(#{GeneratorBase.odb_connection[:object]}&);"
     end
   end
 
@@ -242,7 +253,7 @@ CPP
     store_type = "std::vector<#{id_type}>"
     with_visibility :public do
       _append "const #{store_type}& get_#{singular_name}_ids() const { return #{singular_name}_ids; }"
-      _append "const #{list_type}& get_#{name}();"
+      _append "const #{list_type}& get_#{name}(#{GeneratorBase.odb_connection[:object]}&);"
       _append "void set_#{singular_name}_ids(const #{store_type}& val) { #{singular_name}_ids = val; #{name}_fetched = false; }"
     end
     has_many_fetch list_type, name, options

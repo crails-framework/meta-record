@@ -26,7 +26,8 @@ class CrailsEditGenerator < GeneratorBase
   end
 
   def generate_edit_method object
-    _append "void #{@klassname}::edit(Data data)"
+    db_param = "#{GeneratorBase.odb_connection[:object]}& database"
+    _append "void #{@klassname}::edit(#{db_param}, Data data)"
     _append "{"
     @indent += 1
     self.instance_eval &object[:block]
@@ -68,7 +69,7 @@ class CrailsEditGenerator < GeneratorBase
   end
 
   def generate_is_valid object
-    _append "bool #{@klassname}::is_valid(Crails::Odb::Connection& database)"
+    _append "bool #{@klassname}::is_valid(#{GeneratorBase.odb_connection[:object]}& database)"
     _append "{"
     @indent += 1
     _append "errors.clear();"
@@ -138,9 +139,8 @@ class CrailsEditGenerator < GeneratorBase
   def has_one_getter type, name, options
     type = get_type type
     tptr = ptr_type type
-    _append "#{tptr} #{@klassname}::get_#{name}() const"
+    _append "#{tptr} #{@klassname}::get_#{name}(#{GeneratorBase.odb_connection[:object]}& database) const"
     _append "{"
-    _append "  #{GeneratorBase.odb_connection[:object]} database;"
     _append "  #{tptr} result;\n"
     _append "  database.find_one(result, #{name}_id);"
     _append "  return result;"
@@ -164,7 +164,6 @@ class CrailsEditGenerator < GeneratorBase
     _append "    set_#{name}(nullptr);"
     _append "  else if (!get_#{name}() || #{data_id} != get_#{name}()->get_id())"
     _append "  {"
-    _append "    #{GeneratorBase.odb_connection[:object]} database;"
     _append "    #{tptr} linked_resource;"
     _append "    database.find_one(linked_resource, data[\"#{name}_id\"].as<#{id_type}>());"
     _append "    set_#{name}(linked_resource);"
@@ -219,10 +218,19 @@ class CrailsEditGenerator < GeneratorBase
       else
         _id_based_has_many type, name, options
       end
-      _append "void #{@klassname}::collect_#{name}(std::map<#{id_type}, #{ptr_type type}>& results)"
+      _append "// options[:joined] = #{options[:joined]}, #{options[:joined] != false}"
+      if options[:joined] != false
+        _append "void #{@klassname}::collect_#{name}(std::map<#{id_type}, #{ptr_type type}>& results)"
+      else
+        _append "void #{@klassname}::collect_#{name}(#{GeneratorBase.odb_connection[:object]}& database, std::map<#{id_type}, #{ptr_type type}>& results)"
+      end
       _append "{"
       @indent += 1
-      _append "for (auto model : get_#{name}())"
+      if options[:joined] != false
+        _append "for (auto model : get_#{name}())"
+      else
+        _append "for (auto model : get_#{name}(database))"
+      end
       _append "{"
       @indent += 1
       _append "if (results.find(model->get_id()) == results.end())"
@@ -314,12 +322,12 @@ class CrailsEditGenerator < GeneratorBase
     @indent -= 2
     _append "}\n"
 
-    _append "const std::list<#{tptr} >& #{@klassname}::get_#{name}()"
+    _append "const std::list<#{tptr} >& #{@klassname}::get_#{name}(#{GeneratorBase.odb_connection[:object]}& database)"
     _append "{"
     @indent += 1
     _append "if (!#{name}_fetched)"
     @indent += 1
-    _append "fetch_#{name}();"
+    _append "fetch_#{name}(database);"
     @indent -= 1
     _append "return #{name};"
     @indent -= 1
@@ -331,11 +339,10 @@ class CrailsEditGenerator < GeneratorBase
   def has_many_fetch type, name, options
     singular_name = get_singular_name name
 
-    _append "void #{@klassname}::fetch_#{name}()"
+    _append "void #{@klassname}::fetch_#{name}(#{GeneratorBase.odb_connection[:object]}& database)"
     _append "{"
     @indent += 1
     _append "typedef odb::pgsql::query<#{type}> query;"
-    _append "#{GeneratorBase.odb_connection[:object]} database;"
     _append "odb::result<#{type}> results;"
     _append "#{name}.clear();"
     _append "database.find<#{type}>(results,"

@@ -18,6 +18,7 @@ class CrailsViewGenerator < GeneratorBase
     reset
     @declarations << "#include \"#{object[:header]}\"\n"
     @declarations << "#{object[:classname]}& @model;"
+    @declarations << "Crails::Odb::Connection& @database;"
     property id_type, "id"
     self.instance_eval &object[:block]
     @src
@@ -52,7 +53,9 @@ class CrailsViewGenerator < GeneratorBase
     _append "{"
     @indent += 1
     id_attr = (get_singular_name name) + "_ids"
-    id_collector = if options[:joined] == false
+    id_collector = if options.key? :ids_getter
+                     options[:ids_getter]
+                   elsif options[:joined] == false
                      "model.get_#{id_attr}()"
                    else
                      "collect_ids_from(model.get_#{name}())"
